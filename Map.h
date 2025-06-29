@@ -18,7 +18,7 @@ struct Room {
     int x, y;
     RoomType type = EMPTY;
     bool visited = false;
-    bool connections[4] = {false, false, false, false}; // up, right, down, left
+    bool connections[4] = {false, false, false, false};
 };
 
 class Map {

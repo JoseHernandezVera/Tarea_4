@@ -1,6 +1,5 @@
 #include "Map.h"
 #include "DFSGenerator.h"
-#include "PrimGenerator.h"
 #include <iostream>
 
 int contarHabitaciones(const Map& map) {
@@ -43,17 +42,6 @@ int main() {
     std::cout << "Tiendas: " << contarTipo(mapDFS, SHOP) << "\n";
     std::cout << "Trampas: " << contarTipo(mapDFS, TRAP) << "\n";
     std::cout << "Camino principal (profundidad): " << valor << "\n";
-
-    std::cout << "\n--- Generando mapa con Prim ---\n";
-    Map mapPrim(width, height);
-    PrimGenerator::generate(mapPrim, valor);
-    mapPrim.print();
-
-    std::cout << "Habitaciones totales: " << contarHabitaciones(mapPrim) << "\n";
-    std::cout << "Tesoros: " << contarTipo(mapPrim, TREASURE) << "\n";
-    std::cout << "Tiendas: " << contarTipo(mapPrim, SHOP) << "\n";
-    std::cout << "Trampas: " << contarTipo(mapPrim, TRAP) << "\n";
-    std::cout << "Camino principal (profundidad): N/A (crecimiento radial)\n";
 
     return 0;
 }

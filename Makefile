@@ -2,7 +2,7 @@ CXX = g++
 CXXFLAGS = -std=c++17 -Wall -O2
 SRC = main.cpp Map.cpp DFSGenerator.cpp PrimGenerator.cpp
 OBJ = $(SRC:.cpp=.o)
-TARGET = mapgen
+TARGET = tarea4
 
 all: $(TARGET)
 

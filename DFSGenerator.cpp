@@ -98,7 +98,6 @@ void DFSGenerator::generate(Map& map, int maxDepth) {
 
     if (bossRoom) bossRoom->type = BOSS;
 
-    // Colocar salas especiales
     placeSpecialRooms(map);
 }
 
