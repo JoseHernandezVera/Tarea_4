@@ -1,6 +1,6 @@
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -O2
-SRC = main.cpp Map.cpp DFSGenerator.cpp PrimGenerator.cpp
+SRC = main.cpp Map.cpp DFSGenerator.cpp
 OBJ = $(SRC:.cpp=.o)
 TARGET = tarea4
 

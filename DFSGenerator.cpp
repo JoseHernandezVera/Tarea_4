@@ -40,10 +40,8 @@ namespace {
 
             Room& neighbor = map.getRoom(nx, ny);
             if (!neighbor.visited) {
-                // Primero intentamos visitar
                 dfs(map, nx, ny, depth + 1, maxDepth);
 
-                // Solo conectamos si realmente fue incluida en el mapa
                 if (neighbor.visited && neighbor.type != EMPTY) {
                     int dirIdx = directionIndex(dir);
                     int opposite = (dirIdx + 2) % 4;
@@ -55,7 +53,7 @@ namespace {
         }
     }
 
-    void placeSpecialRooms(Map& map, int treasures = 1, int shops = 1, int traps = 2) {
+    void placeSpecialRooms(Map& map) {
         std::vector<Room*> candidates;
         for (int y = 0; y < map.getHeight(); ++y)
             for (int x = 0; x < map.getWidth(); ++x) {
@@ -66,6 +64,12 @@ namespace {
 
         std::shuffle(candidates.begin(), candidates.end(), rng);
         size_t i = 0;
+
+        std::uniform_int_distribution<> treasures_dist(1, 3);
+        std::uniform_int_distribution<> traps_dist(1, 4);
+        int treasures = treasures_dist(rng);
+        int traps = traps_dist(rng);
+        int shops = 1;
 
         for (int j = 0; j < treasures && i < candidates.size(); ++j)
             candidates[i++]->type = TREASURE;
@@ -81,7 +85,6 @@ void DFSGenerator::generate(Map& map, int maxDepth) {
     int cy = map.getHeight() / 2;
     dfs(map, cx, cy, 0, maxDepth);
 
-    // Colocar jefe en la sala más alejada del centro
     Room* bossRoom = nullptr;
     int maxDist = -1;
     for (int y = 0; y < map.getHeight(); ++y)
@@ -100,4 +103,3 @@ void DFSGenerator::generate(Map& map, int maxDepth) {
 
     placeSpecialRooms(map);
 }
-

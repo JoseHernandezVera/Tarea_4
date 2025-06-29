@@ -29,7 +29,7 @@ int main() {
     std::cout << "Alto del mapa: ";
     std::cin >> height;
 
-    std::cout << "Profundidad max (DFS) / Cantidad de salas (Prim): ";
+    std::cout << "Profundidad max (DFS): ";
     std::cin >> valor;
 
     std::cout << "\n--- Generando mapa con DFS ---\n";
