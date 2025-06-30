@@ -1,3 +1,4 @@
+// Codigo hecho por José Fernando Hernández Vera
 #include "DFSGenerator.h"
 #include <vector>
 #include <utility>
@@ -65,7 +66,7 @@ namespace {
         std::shuffle(candidates.begin(), candidates.end(), rng);
         size_t i = 0;
 
-        std::uniform_int_distribution<> treasures_dist(1, 3);
+        std::uniform_int_distribution<> treasures_dist(1, 4);
         std::uniform_int_distribution<> traps_dist(1, 4);
         int treasures = treasures_dist(rng);
         int traps = traps_dist(rng);

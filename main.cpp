@@ -1,3 +1,4 @@
+// Codigo hecho por José Fernando Hernández Vera
 #include "Map.h"
 #include "DFSGenerator.h"
 #include <iostream>
@@ -39,7 +40,6 @@ int main() {
 
     std::cout << "Habitaciones totales: " << contarHabitaciones(mapDFS) << "\n";
     std::cout << "Tesoros: " << contarTipo(mapDFS, TREASURE) << "\n";
-    std::cout << "Tiendas: " << contarTipo(mapDFS, SHOP) << "\n";
     std::cout << "Trampas: " << contarTipo(mapDFS, TRAP) << "\n";
     std::cout << "Camino principal (profundidad): " << valor << "\n";
 

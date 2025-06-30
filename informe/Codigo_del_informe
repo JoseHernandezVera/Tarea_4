@@ -1,0 +1,222 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{hyperref}
+\geometry{margin=2.5cm}
+
+\title{Generación Procedural de Mapas Basado en \textit{The Binding of Isaac}}
+\author{José Fernando Hernández Vera}
+\date{29/06}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Este trabajo presenta una implementación de generación procedural de mapas inspirada en el videojuego \textit{The Binding of Isaac}, utilizando el algoritmo clásico de búsqueda en profundidad (DFS). Se describe la lógica de generación, los parámetros configurables y el proceso de postprocesado para colocar salas especiales. A través de múltiples ejecuciones, se valida que el sistema genera mapas acíclicos, conectados y variados, adecuados para juegos con alta rejugabilidad y exploración estratégica.
+\end{abstract}
+
+\section{Introducción}
+
+\subsection*{Juego de referencia}
+\textit{The Binding of Isaac} es un videojuego de acción tipo rogue-like en el que el jugador progresa a través de niveles generados proceduralmente. Cada nivel consiste en una serie de habitaciones interconectadas, donde el jugador debe explorar, enfrentarse a enemigos, recolectar objetos y, finalmente, derrotar a un jefe. La estructura del mapa varía en cada partida, lo que incrementa la rejugabilidad y el interés por la exploración.
+
+\subsection*{Características de interés a recrear}
+Se han identificado las siguientes características del juego original que se busca replicar mediante generación procedural:
+
+\begin{itemize}
+  \item \textbf{Plano del piso:} El mapa se compone de una cuadrícula de habitaciones cuadradas distribuidas de manera no determinista.
+  \item \textbf{Habitaciones especiales:} Algunas habitaciones son asignadas como especiales (tiendas, salas de recompensas, jefes) y se colocan en posiciones clave dentro del mapa.
+  \item \textbf{Conectividad:} Las habitaciones se conectan para formar un grafo que permite un recorrido completo desde la entrada hasta el jefe. No todas las habitaciones están conectadas entre sí, y pueden existir ramas secundarias opcionales.
+  \item \textbf{Tamaño del mapa:} El número de habitaciones y la complejidad del diseño aumentan progresivamente a medida que el jugador avanza de nivel.
+  \item \textbf{Ausencia de bucles:} El mapa es acíclico, lo que significa que no existen ciclos; el jugador no puede regresar a habitaciones previamente visitadas en el mismo nivel.
+\end{itemize}
+
+\subsection*{Justificación y selección de algoritmos}
+Para modelar estas características, se empleó el algoritmo de generación de laberintos basado en árboles, específicamente:
+
+\begin{itemize}
+  \item \textbf{DFS Maze Generation (Depth-First Search):} útil para crear un camino principal con bifurcaciones ocasionales.
+\end{itemize}
+
+Este algoritmo garantiza estructuras acíclicas, permite mantener conectividad global y ofrece flexibilidad para insertar reglas adicionales como habitaciones especiales, lo que lo hace adecuado para el diseño procedural de este tipo de juegos.
+
+\section{Estado del Arte}
+
+Diversos videojuegos han implementado generación procedural de mapas con características similares a las aquí descritas, algunos son:
+
+\begin{itemize}
+  \item \textbf{Enter the Gungeon:} Utiliza una estructura de grafo acíclico, generada mediante algoritmos como Prim o DFS, para asegurar conectividad entre habitaciones clave como entrada, jefe, tienda, etc sin permitir bucles. Esto proporciona una estructura ramificada con caminos opcionales.
+  
+  \item \textbf{Spelunky:} Emplea una mezcla de Random Walk y plantillas predefinidas para construir niveles con múltiples rutas y espacios semiabiertos. Aunque no genera árboles estrictos, introduce elementos aleatorios dentro de bloques estructurados, logrando variedad y coherencia.
+  
+  \item \textbf{Dead Cells:} Combina algoritmos tipo BSP (Binary Space Partitioning) y lógica de selección procedural para generar mapas acíclicos con caminos secundarios. Se enfoca en ofrecer rutas con decisiones estratégicas, manteniendo la progresión controlada.
+  
+  \item \textbf{Rogue:} Uno de los pioneros en usar DFS (búsqueda en profundidad) y BFS (búsqueda en anchura) modificados para crear laberintos acíclicos, con un camino principal y ramas opcionales. Esta aproximación ha influido en muchos títulos actuales del género \textit{rogue-like}.
+\end{itemize}
+
+\section{Metodología}
+
+\subsection*{Algoritmo a implementar}
+
+\begin{itemize}
+  \item \textbf{DFS Maze Generation (búsqueda en profundidad):} se utiliza para crear un camino principal desde la entrada hasta el jefe, con la posibilidad de incluir ramificaciones.
+\end{itemize}
+
+Este método permite equilibrar aleatoriedad con estructura, favoreciendo la diversidad de mapas sin comprometer la jugabilidad.
+
+\subsection*{Variaciones propuestas}
+
+\begin{itemize}
+  \item Cambiar algunas habitaciones especiales y quitar a los enemigos, haciendo que las habitaciones especiales den tesoros o bien pueden ser una trampa.
+  \item Reglas para controlar el tamaño y la ramificación del mapa según el nivel de complejidad que queremos en el juego.
+  \item Validaciones post-generación para asegurar conectividad mínima y cumplimiento de restricciones sin ciclos, tamaño adecuado y habitaciones clave presentes.
+\end{itemize}
+
+\subsection*{Hiperparámetros a modificar}
+
+\begin{itemize}
+  \item Tamaño del mapa: número total de habitaciones por nivel.
+  \item Número y tipo de habitaciones especiales.
+  \item Profundidad máxima que sería la distancia desde la entrada hasta la sala del jefe.
+\end{itemize}
+
+\subsection*{Ejecución de experimentos}
+
+Se realizaron múltiples ejecuciones por cada configuración de hiperparámetros, generando mapas bajo diferentes condiciones. Las métricas a evaluar incluyen:
+
+\begin{itemize}
+  \item Longitud del camino principal.
+  \item Número de habitaciones totales.
+  \item Cantidad y ubicación de salas especiales.
+  \item Variedad estructural entre ejecuciones.
+\end{itemize}
+
+\section{Resultados}
+
+Se realizaron múltiples ejecuciones del sistema utilizando el algoritmo DFS, variando parámetros como tamaño del mapa y profundidad máxima. A continuación, se presentan los datos recopilados y los parámetros que usamos.
+
+\subsection*{Parámetros utilizados}
+
+\begin{itemize}
+    \item Tamaño del mapa: $10 \times 10$
+    \item Profundidad máxima: 10
+    \item Salas especiales colocadas: 1 tesoro, 1 tienda, 2 trampas
+\end{itemize}
+
+\subsection*{Datos generados}
+
+A continuación, se presentan los datos recopilados de 10 pruebas con distintas profundidades de generación (5 y 10). Se muestran métricas clave como el total de habitaciones, cantidad de salas especiales y trampas.
+
+\vspace{0.5em}
+\textbf{Pruebas con profundidad 10}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{Prueba} & \textbf{Total habitaciones} & \textbf{Tesoro} & \textbf{Trampas} & \textbf{Profundidad} \\
+\hline
+1 & 65 & 1 & 2 & 10 \\
+2 & 73 & 1 & 3 & 10 \\
+3 & 66 & 3 & 4 & 10 \\
+4 & 49 & 2 & 3 & 10 \\
+5 & 78 & 4 & 4 & 10 \\
+\hline
+\textbf{Promedio} & 66.2 & 2.2 & 3.2 & 10 \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{1em}
+\textbf{Pruebas con profundidad 5}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{Prueba} & \textbf{Total habitaciones} & \textbf{Tesoro} & \textbf{Trampas} & \textbf{Profundidad} \\
+\hline
+6 & 28 & 3 & 4 & 5 \\
+7 & 46 & 2 & 1 & 5 \\
+8 & 31 & 2 & 4 & 5 \\
+9 & 33 & 4 & 2 & 5 \\
+10 & 31 & 2 & 4 & 5 \\
+\hline
+\textbf{Promedio} & 33.8 & 2.6 & 3.0 & 5 \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{Visualización del mapa}
+
+A continuación se mostraran los mapas generados correspondientes a cada una de las pruebas realizadas donde el gato corresponde a un sala normal, el simbolo del dinero corresponde a la tienda, la S corresponde en donde empieza el jugador, los O corresponden a que no hay nada, la T corresponde a las trampas y la B corresponde a la sala del jefe.
+
+\begin{center}
+\begin{tabular}{cc}
+\includegraphics[width=0.4\textwidth]{testeo1.png} & \includegraphics[width=0.4\textwidth]{testeo2.png} \\
+\texttt{Mapa 1} & \texttt{Mapa 2} \\
+\includegraphics[width=0.4\textwidth]{testeo3.png} & \includegraphics[width=0.4\textwidth]{testeo4.png} \\
+\texttt{Mapa 3} & \texttt{Mapa 4} \\
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{cc}
+\includegraphics[width=0.4\textwidth]{testeo5.png} & \includegraphics[width=0.4\textwidth]{testeo6.png} \\
+\texttt{Mapa 5} & \texttt{Mapa 6} \\
+\includegraphics[width=0.4\textwidth]{testeo7.png} & \includegraphics[width=0.4\textwidth]{testeo8.png} \\
+\texttt{Mapa 7} & \texttt{Mapa 8} \\
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{cc}
+\includegraphics[width=0.4\textwidth]{testeo9.png} & \includegraphics[width=0.4\textwidth]{testeo10.png} \\
+\texttt{Mapa 9} & \texttt{Mapa 10} \\
+\end{tabular}
+\end{center}
+
+\section{Discusión}
+
+El algoritmo DFS permitió generar mapas con un camino principal bien definido y ramificaciones laterales, lo cual se alinea con el estilo de exploración del juego \textit{The Binding of Isaac}. La profundidad máxima actúa como límite de complejidad de la mazmorra, controlando la distancia desde la entrada hasta la sala del jefe. \\
+
+Se pudo observar que, al limitar la profundidad, se generan mapas más compactos, y al incrementarla, se obtienen estructuras más laberínticas. Las salas especiales se distribuyen correctamente gracias a una etapa de postprocesado que selecciona habitaciones válidas de forma aleatoria, manteniendo la coherencia estructural y la rejugabilidad, produciendo que al momento de querer configurar la dificultad esta se podría hacer más sencillamente al solo tener que cambiar la profundidad. \\
+
+En todas las ejecuciones, se cumplió con las restricciones deseadas: mapa acíclico, conectividad garantizada, y salas clave (inicio, jefe, tienda, trampa y tesoro) posicionadas de forma estratégica.
+
+\section{Conclusiones}
+
+La implementación del algoritmo DFS para generación procedural de mapas demostró ser efectiva para crear estructuras explorables, conectadas y sin ciclos, adecuadas para juegos tipo rogue-like. Gracias a su sencillez y flexibilidad, el sistema permite controlar la dificultad y diversidad del mapa mediante parámetros como la profundidad máxima y la cantidad de salas especiales. \\
+
+El enfoque basado en generación recursiva y validación posterior garantiza la creación de mapas coherentes que incentivan la exploración y la toma de decisiones estratégicas por parte del jugador. \\
+
+Este trabajo serviría como base para futuras mejoras como generación e integración de enemigos dinámicos, o adaptación progresiva de la dificultad según el nivel alcanzado.
+
+\section{Bibliografía}
+\begin{itemize}
+    \item Link del juego The Binding of Isaac. \\
+    \url{https://store.steampowered.com/app/113200/The_Binding_of_Isaac/}
+
+    \item Link del juego Dead Cells. \\ \url{https://store.steampowered.com/app/588650/Dead_Cells/}
+
+    \item Link del juego Spelunky. \\     
+    \url{https://store.steampowered.com/app/239350/Spelunky/}
+
+    \item Link del juego Enter the Gungeon. \\ \url{https://store.steampowered.com/app/311690/Enter_the_Gungeon/}
+
+    \item Link del juego Rogue. \\          \url{https://store.steampowered.com/app/1443430/Rogue/}
+    
+    \item Link de investigacion del The Binding of Isaac. \\
+    \url{https://www.boristhebrave.com/2020/09/12/dungeon-generation-in-binding-of-isaac/}
+    
+    \item Link de investigacion del Depth First Search (DFS). \\
+    \url{https://interviewkickstart.com/blogs/learn/depth-first-search-algorithm}
+
+    \item Link de investigacion en general de algoritmos de generación procedural. \\ \url{https://riull.ull.es/xmlui/bitstream/handle/915/39978/Generacion%20Procedural%20de%20Contenido%202D%20en%20Videojuegos.pdf?sequence=1&isAllowed=y}
+    
+\end{itemize}
+\end{document}
